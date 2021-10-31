@@ -1,0 +1,30 @@
+---
+output:
+  word_document: default
+  html_document: default
+editor_options: 
+  chunk_output_type: console
+---
+# Module 3 - Assignment 2
+## Reyes, Marielli Nicole
+### Introduction to R Markdown
+This is my first R Markdown document and it will cover some of the topics previously discussed in the course such as atomic vectors, data frames and data types. It will show the code that is used to load packages such as tidyverse and ggplot. Also, an example of the code used for creating basic plots will be shown. 
+
+The code below is for a basic plot showing sales over the past 6 months.
+```{r Plot of Sales by Month}
+library("tidyverse")
+sales <- c(50, 150, 200, 100, 300, 250)
+month <- c(1, 2, 3, 4, 5, 6)
+library("ggplot2")
+qplot(month, sales)
+```
+
+The scatterplot shows that the 5th month had the highest sales, with total sales amounting to $300. 
+
+```{r Working with Data Frames}
+yearly_sales <- data.frame(month = c("Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"), sales = c(150.25, 258.54, 268.55, 122.52, 987,458.82, 667.23, 845.54, 586.78, 888.58, 756.12, 456.84))
+qplot(yearly_sales$sales, yearly_sales$month)
+```
+
+The data shows that May had the most sales, while April had the least amount of sales.
+

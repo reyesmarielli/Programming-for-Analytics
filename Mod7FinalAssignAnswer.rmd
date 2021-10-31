@@ -1,0 +1,178 @@
+---
+chunk_output_type: console
+editor_options: null
+output:
+  word_document: default
+  html_document: default
+---
+# MIS503 - Final Project
+## Reyes, Marielli Nicole
+### Zillow Home Value Index Analysis
+
+### Wake County Home Sales
+
+a. What have been the overall trends in Wake County Home Values?
+   There were some dips in home values in Wake County but overall the home values in Wake      County have been increasing.
+   
+b. There were dips in home values in the past 20 years. What years did these occur?
+   In 1997, 1998, 2009, 2010, 2011 and 2012, home values in Wake County decreased.
+   
+c. Based on the analysis, where would be the least expensive area to purchase home? Most       expensive area?
+   In 2018, the least expensive area to purchase a home would be in Zebulon, and the most      expensive area is New Hill. 
+   
+d. Are any area home values trending down? Is there one area that stands out compared to      others? There are no area home values trending down. Zebulon stands out compared to    
+   others because its home values remained fairly consistent throughout the years.
+
+```{r}
+library("tidyverse")
+library(readr)
+SingleFamilyResidenceSales <- read_csv("SingleFamilyResidenceSales.csv")
+```
+
+
+```{r}
+WakeCountySales <- SingleFamilyResidenceSales %>%
+  select(RegionName,State,CountyName,Metro,"1996-05","1997-05","1998-05","1999-05","2000-05","2001-05","2002-05","2003-05","2004-05","2005-05","2006-05","2007-05","2008-05","2009-05","2010-05","2011-05","2012-05","2013-05","2014-05","2015-05","2016-05","2017-05","2018-05") %>%
+  filter(State=="NC",CountyName=="Wake County")
+
+WakeCountySales <- rename(WakeCountySales,"1996"="1996-05","1997"="1997-05","1998"="1998-05","1999"="1999-05","2000"="2000-05","2001"="2001-05","2002"="2002-05","2003"="2003-05","2004"="2004-05","2005"="2005-05","2006"="2006-05","2007"="2007-05","2008"="2008-05","2009"="2009-05","2010"="2010-05","2011"="2011-05","2012"="2012-05","2013"="2013-05","2014"="2014-05","2015"="2015-05","2016"="2016-05","2017"="2017-05","2018"="2018-05")
+```
+
+```{r}
+WakeCountySales <- WakeCountySales %>%
+  gather("1996","1997","1998","1999","2000","2001","2002","2003","2004","2005","2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018",key='YR',value='ZHVI')
+```
+```{r}
+ggplot(WakeCountySales, aes(x=YR,y=ZHVI,color=RegionName))+
+    geom_point()+
+    labs(title="Wake County Home Sales",
+             x="Year",
+             y="Home Values (in $)")+
+    theme(axis.text.x = element_text(angle = 90, vjust=0.5))+
+    scale_y_continuous(name="Home Values (in $)", labels = scales::comma)
+
+ggplot(WakeCountySales, aes(x=YR,y=ZHVI,color=RegionName))+
+    geom_col()+
+    labs(title="Wake County Home Sales",
+             x="Year",
+             y="Home Values (in $)")+
+    theme(axis.text.x = element_text(angle = 90, vjust=0.5))+
+    scale_y_continuous(name="Home Values (in $)", labels = scales::comma)
+   
+```
+
+
+### NC Rental Market
+
+a. What has been the overall trend in the rental market around the state? Are there any cities that have not followed this trend? 
+  Overall, rental cost for the state have increased throughout the years. Fayetteville, however, have decreased its rental cost in 2011 and 2016, and remained fairly consistent for the other years. 
+b. Where is the most expensive city to rent in? Least expensive?
+For 2018, the most expensive city to rent in is Asheville, while the least expensive is Fayetteville. 
+c. You are trying decide between Wilmington and Asheville. Which market has the lowest rent? Wilmington has a lower rent cost than Asheville. 
+  
+  
+```{r}
+library(tidyverse)
+library(readr)
+SingleFamilyResidenceRental <- read_csv("SingleFamilyResidenceRental.csv")
+```
+
+```{r}
+Rentals <- SingleFamilyResidenceRental %>%
+  select(RegionName,State,"2010-11","2011-11","2012-11","2013-11","2014-11","2015-11","2016-11","2017-11","2018-10") %>%
+  filter(RegionName %in% c("Asheville","Charlotte","Durham","Fayetteville","Raleigh","Wilmington"),State=="NC")
+
+Rentals <- rename(Rentals,"2010"="2010-11","2011"="2011-11","2012"="2012-11","2013"="2013-11","2014"="2014-11","2015"="2015-11","2016"="2016-11","2017"="2017-11","2018"="2018-10")
+
+Rentals <- Rentals %>%
+  gather("2010","2011","2012","2013","2014","2015","2016","2017","2018",key='YR',value='ZHVI')
+
+ggplot(Rentals, aes(x=YR,y=ZHVI,color=RegionName))+
+  geom_point()+
+  labs(title="Rental Costs in NC Cities",
+             x="Year",
+             y="Average Rental Cost")+
+  theme(axis.text.x = element_text(angle = 90, vjust=0.5))+
+  scale_y_continuous(name="Average Rental Cost", labels = scales::comma)
+
+ggplot(Rentals, aes(x=YR,y=ZHVI,color=RegionName))+
+    geom_col()+
+    labs(title="Rental Costs in NC Cities",
+             x="Year",
+             y="Average Rental Cost")+
+    theme(axis.text.x = element_text(angle = 90, vjust=0.5))+
+    scale_y_continuous(name="Average Rental Cost", labels = scales::comma)
+```
+
+
+
+### Home Values in Select Rental Markets
+
+a. According to the results, which market has the lowest median price (represented as horizontal bar in box plot)? Charlotte-Concord-Gastonia has the lowest median price.
+b. The violin plot will show density meaning the wider the plot is, the more observations occur within that area. Which market has the most density around the median value of homes?
+Charlotte-Concord-Gastonia has the most density around the median value of homes.
+
+```{r}
+library("tidyverse")
+library(readr)
+SingleFamilyResidenceSales <- read_csv("SingleFamilyResidenceSales.csv")
+NCHomeSales <- SingleFamilyResidenceSales %>%
+  select(RegionName,State,Metro,"1996-05","1997-05","1998-05","1999-05","2000-05","2001-05","2002-05","2003-05","2004-05","2005-05","2006-05","2007-05","2008-05","2009-05","2010-05","2011-05","2012-05","2013-05","2014-05","2015-05","2016-05","2017-05","2018-05") %>%
+  filter(Metro %in% c("Asheville","Charlotte-Concord-Gastonia","Raleigh","Wilmington"),State=="NC")
+
+NCHomeSales <- rename(NCHomeSales,"1996"="1996-05","1997"="1997-05","1998"="1998-05","1999"="1999-05","2000"="2000-05","2001"="2001-05","2002"="2002-05","2003"="2003-05","2004"="2004-05","2005"="2005-05","2006"="2006-05","2007"="2007-05","2008"="2008-05","2009"="2009-05","2010"="2010-05","2011"="2011-05","2012"="2012-05","2013"="2013-05","2014"="2014-05","2015"="2015-05","2016"="2016-05","2017"="2017-05","2018"="2018-05")
+
+NCHomeSales <- NCHomeSales %>%
+  gather("1996","1997","1998","1999","2000","2001","2002","2003","2004","2005","2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018",key='YR',value='ZHVI')
+
+NCHomeSales <- group_by(NCHomeSales,Metro)
+
+ggplot(NCHomeSales, aes(x=Metro,y=ZHVI))+
+    geom_violin()+
+    geom_boxplot(width=0.1)+
+    labs(title="NC Home Sales",
+             x="Metro",
+             y="Home Values (in $)")
+```
+
+### Relocation Home Value Comparison
+
+a. Based on your analysis, which city’s housing is most affordable? Least affordable?
+   Houston's housing is the most affordable and New York is the least affordable.
+    
+b. Which cities saw the largest change in prices over the past 5 years? Which city has     
+   remained more consistent (i.e., no huge swings up or down in home values)?
+   New York saw the largest change in prices over the past 5 years while Texas remained       more consistent. 
+  
+c. During the market downturn in 2012, which cities were most impacted? Which cities have
+   recovered?
+   New York was impacted the most during the market downturn in 2012, while Denver        
+   experienced an increase in housing values in 2012. All of the cities recovered after the    market downturn in 2012 but New York and Denver's housing values increased more than    
+   Chicago and Houston. 
+   
+```{r}
+library("tidyverse")
+library(readr)
+SingleFamilyResidenceSales <- read_csv("SingleFamilyResidenceSales.csv")
+
+NationalHomeSales <- SingleFamilyResidenceSales %>%
+  select(RegionName,State,Metro,"1996-05","1997-05","1998-05","1999-05","2000-05","2001-05","2002-05","2003-05","2004-05","2005-05","2006-05","2007-05","2008-05","2009-05","2010-05","2011-05","2012-05","2013-05","2014-05","2015-05","2016-05","2017-05","2018-05") %>%
+  filter(RegionName %in% c("Chicago","Denver","Houston","New York"), State %in% c("IL","CO","TX","NY"))
+
+NationalHomeSales <- rename(NationalHomeSales,"1996"="1996-05","1997"="1997-05","1998"="1998-05","1999"="1999-05","2000"="2000-05","2001"="2001-05","2002"="2002-05","2003"="2003-05","2004"="2004-05","2005"="2005-05","2006"="2006-05","2007"="2007-05","2008"="2008-05","2009"="2009-05","2010"="2010-05","2011"="2011-05","2012"="2012-05","2013"="2013-05","2014"="2014-05","2015"="2015-05","2016"="2016-05","2017"="2017-05","2018"="2018-05")
+
+NationalHomeSales <- NationalHomeSales %>%
+  gather("1996","1997","1998","1999","2000","2001","2002","2003","2004","2005","2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018",key='YR',value='ZHVI')
+
+NationalHomeSales <- group_by(NationalHomeSales,Metro)
+
+ggplot(NationalHomeSales, aes(x=YR,y=ZHVI))+
+    geom_point()+
+    facet_wrap(~Metro)+
+    labs(title="City Home Value Comparison",
+             x="Year",
+             y="Home Values (in $)")+
+    theme(axis.text.x = element_text(angle = 90, vjust=0.5, size=5))+
+    scale_y_continuous(name="Home Values (in $)", labels = scales::comma)
+```
+

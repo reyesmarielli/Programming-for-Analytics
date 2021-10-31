@@ -1,0 +1,65 @@
+---
+editor_options:
+  chunk_output_type: console
+output:
+  word_document: default
+  html_document: default
+---
+# Module 4 - Assignment 2
+## Reyes, Marielli Nicole
+### Exploratory Data Analysis
+
+
+```{r}
+library(tidyverse)
+```
+
+#### Diamond Color and Price
+
+```{r}
+ggplot(diamonds, aes(x=carat,y=price))+
+    geom_point()
+```
+
+1.) What do you notice from the scatterplot as the carat size increases?
+    As the carat size increases, the price also increases.
+
+2.) From the scatterplot, what carats are most represented within the diamonds dataset?
+    Diamonds that are less than 1 carat are most represented within the dataset.
+
+
+```{r}
+ggplot(diamonds, aes(x=color,y=price))+
+    geom_point()
+```
+
+The results created vertical lines for every color but it is not as useful since it doesn't clearly show the difference between the colors and its impact on price. Thus, based solely on color, a significant difference can't be seen. 
+
+
+```{r}
+ggplot(diamonds, aes(x=carat,y=price, color=color))+
+    geom_point()
+```
+
+Interestingly, results show that the diamonds with the worse color quality have high prices. It may be assumed that color itself does not determine the price of the diamond. Perhaps, other factors may be taken into account such as the clarity or cut of the diamond. In addition, the results show that there is not a clear connection between the color quality of the diamond and carat. For example, the worst color category, J, have carat sizes that are less than 0.5 up to 5.
+
+
+```{r}
+dsample <- diamonds[sample(nrow(diamonds), 100), ]
+ggplot(dsample, aes(x=carat,y=price, color=color))+
+    geom_point()+
+    geom_smooth(method="lm")
+```
+
+The smaller set of data helped in better showing the trends in the dataset. The results show that the worst color category, J, are lower in price compared to the better color categories. Also, the plot clearly shows that as the carat size increases, the price also increases for all the color categories. Thus, despite the color quality, given that the carat size gets bigger, price will also increase. 
+
+
+```{r}
+ggplot(diamonds, aes(x=carat,y=price, color=color))+
+    geom_boxplot()
+
+ggplot(diamonds, aes(x=carat,y=price, color=color))+
+    geom_line()
+```
+
+Like the results earlier, the box plot and line chart show that there is not a strong association between color and price. Some of the worse color quality diamonds have high prices and some of the best color quality diamonds have low prices. It can be seen also that there are a number of outliers in the data. The outliers must be dealt with so as the provide clearer results. Moreover, other factors that may affect price must also be take into account such as cut and clarity. 

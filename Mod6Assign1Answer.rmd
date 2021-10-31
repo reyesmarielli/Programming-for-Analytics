@@ -1,0 +1,108 @@
+---
+output:
+  word_document: default
+  html_document: default
+editor_options: 
+  chunk_output_type: console
+---
+# Module 6 - Assignment 1
+## Reyes, Marielli Nicole
+### Data Wrangling
+
+```{r}
+library("tidyverse")
+library(readxl)
+UN_migrant <- read_excel("UN_migrant.xlsx", 
+    sheet = "Table 6", skip = 15)
+View(UN_migrant)
+```
+
+### Part 2 – Cleaning data with dplyr
+
+```{r}
+UN_migrant <- rename(UN_migrant,Country=X__2,Country_Code=X__4,Type=X__5)
+
+Migration <- select(UN_migrant,Country,Country_Code,Type,"1990","1995","2000","2005","2010","2015")
+head(Migration)
+```
+
+### Part 3 – Creating tidy data using tidyr
+
+```{r}
+Migration2 <- Migration %>%
+  gather("1990","1995","2000","2005","2010","2015",key='year',value='cases')
+head(Migration2)
+Migration2$year <- as.integer(Migration2$year)
+Migration2$cases <- as.integer(Migration2$cases)
+head(Migration2)
+```
+
+### Part 4 – Research Questions
+
+```{r}
+RegionalMigration <- Migration2 %>%
+  select(Country,Country_Code,Type,year,cases) %>%
+  filter(Country %in% c("Africa","Asia","Europe","Oceania","Northern America","South America"))
+
+Americas <- Migration2 %>%
+  select(Country,Country_Code,Type,year,cases) %>%
+  filter(Country %in% c("Central America","South America","Northern America"))
+```
+
+### Worldwide Migration based on Regions
+
+a. Which region in the world had the highest number of migrants in the year 2005?
+b. Over the years, which region consistently has the most migrants every 5 year span? Which    has the second most?
+c. What region has seen the fewest migrants over the years?
+d. Which plot was most useful in answering these questions and why?
+
+
+```{r}
+  ggplot(RegionalMigration, aes(x=year,y=cases,color=Country))+
+      geom_point()+
+      labs(title="Worldwide Migration",
+               x="Year",
+               y="Migrants") 
+
+ggplot(RegionalMigration, aes(x=year,y=cases,fill=Country,))+
+    geom_col()+
+    scale_fill_discrete(name="Region of World")+
+    labs(title="Worldwide Migration",
+             x="Year",
+             y="Migrants") 
+```
+
+a. Asia had the highest number of migrants in the year 2005.
+b. Asia consistently had the most migrants every 5 year span, and Africa consistently had      the second most. 
+c. Oceania had the fewest migrants over the years. 
+d. The bar chart was more useful in answering the questions. In the scatterplot, some of      the points were overlapping or were significantly close to each other so it was         
+   difficult to tell which point was greater or lesser, the bar chart was able to clearly     show the difference because the bar heights represented the values in the data. 
+
+### Americas Migration by Region
+
+a. In 1990, which region had the largest number of migrants for the Americas?
+b. Has this region continued to grow since 1990?
+c. What trends do you notice happening in the Americas over the years?
+d. Specifically, has Northern America increased or decreased over the years?
+e. Which plot was most useful in answering these questions and why?
+
+```{r}
+ggplot(Americas, aes(x=year,y=cases,color=Country))+
+    geom_point()+
+    labs(title="Americas Migration",
+             x="Year",
+             y="Migrants") 
+
+ggplot(Americas, aes(x=year,y=cases,fill=Country,))+
+    geom_col()+
+    scale_fill_discrete(name="Americas Region")+
+    labs(title="Americas Migration",
+             x="Year",
+             y="Migrants") 
+```
+
+a. Central America had the largest number of migrants for the Americas in 1990.
+b. No, central america region didn't increase its number of migrants throughout the years.
+c. Overall, the number of migrants throughout the years for the Americas have decreased. 
+d. Northern America increased its number of migrants in 1995 but had a decline after that.
+e. Both of the plots were useful in answering the questions. For the question comparing the    three regions, it was easier to visualize the difference with the bar chart because the    values are represented well by the height of the bars. However, for questions pertaining    to observations throughout the years, the scatterplot was able to better show the trend    in the data.
